@@ -371,8 +371,11 @@ class AskapOds():
     
     def getCurrentStatus(self):
         # Get the JSON from our endpoint.
-        response = requests.get(url=self.endPoint)
-        self.status = json.loads(response.text)
+        try:
+            response = requests.get(url=self.endPoint)
+            self.status = json.loads(response.text)
+        except requests.exceptions.ConnectionError:
+            print("Connection not made, using old data.")
         #print(self.status)
 
         robj = self.getArrayInformation()
@@ -410,7 +413,7 @@ if __name__ == "__main__":
         print(askapOutObj)
 
         # Write this out to a file.
-        askapFile = outDir + "/askap.json"
+        askapFile = outDir + "/ods.json"
         with open(askapFile, "w") as fp:
             print(askapOutObj, file=fp)
         
